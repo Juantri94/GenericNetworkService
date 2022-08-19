@@ -37,6 +37,7 @@ struct User: Codable {
 final class ApiDatasource {
     
     private let networkService: NetworkServiceProtocol
+    private var token = "4c186d229582f7524b9d7cdd457f07fca3b9e50096eb2adde3326e38d176c9cb"
     
     init(
         networkService: NetworkServiceProtocol
@@ -61,10 +62,10 @@ final class ApiDatasource {
     }
 
     func createUser() async throws {
-        let params = [ "name":"My User", "gender":"male", "email":"my.user8@qwertyu.com", "status":"active" ]
+        let params = [ "name":"My User", "gender":"male", "email":"my.user9@qwertyu.com", "status":"active" ]
         let responseData = try await service.request(
             endpoint: GoRestApiEndpoints.users(nil).endpoint,
-            headers: ["Authorization": "Bearer 4c186d229582f7524b9d7cdd457f07fca3b9e50096eb2adde3326e38d176c9cb"],
+            headers: ["Authorization": "Bearer \(token)"],
             body: params,
             httpMethod: .post)
         let user = try decodeData(responseData, type: User.self)
@@ -72,9 +73,11 @@ final class ApiDatasource {
     }
 
     func deleteUser() async throws {
-        try await service.request(
-            endpoint: GoRestApiEndpoints.users("4253").endpoint,
+        let responseData = try await service.request(
+            endpoint: GoRestApiEndpoints.users("2746").endpoint,
+            headers: ["Authorization": "Bearer \(token)"],
             httpMethod: .delete)
+        print("Delete success: \(responseData.isEmpty)")
     }
 
 }
@@ -115,4 +118,3 @@ Task {
         print(error)
     }
 }
-
